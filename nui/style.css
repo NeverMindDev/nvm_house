@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+#container {
+    background-color: rgba(46, 139, 87, 0.6); /* Sötét zöld háttérszín */
+    padding: 10px;
+    border-radius: 10px; /* Lekerekített sarkok */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9); /* Erősebb árnyék */
+    color: white;
+    width: 450px; /* Szélesség módosítása */
+    box-sizing: border-box;
+    display: none;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5em; /* Nagyobb cím */
+}
+
+.info-section {
+    margin-bottom: 20px;
+}
+
+.info-section label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1em; /* Kicsit nagyobb szöveg méret */
+}
+
+.input {
+    width: calc(100% - 20px); /* Szélesség módosítása */
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd; /* Világos szegély */
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.coords-inputs {
+    display: flex;
+    gap: 10px;
+}
+
+.button, .button1 {
+    background-color: #4caf50; /* Világos zöld háttérszín */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.button i, .button1 i {
+    margin-right: 5px;
+}
+
+.button:hover, .button1:hover {
+    background-color: #006006; /* Sötétebb zöld árnyalat a hover állapothoz */
+}
+
+.button1 {
+    width: 100%;
+    text-align: center;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-group .button {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.button-group .button:last-child {
+    margin-right: 0;
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NVM HOUSE SYSTEM</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="container">
+        <h2>House Adding</h2>
+        <div id="playerinfo" class="info-section">
+            <label for="player">Player ID:</label>
+            <input type="number" class="input" id="player" placeholder="ID">
+        </div>
+        <div id="interior" class="info-section">
+            <label for="interior-select">Interior:</label>
+            <select class="input" id="interior-select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+            </select>
+        </div>
+        <div id="houseinfo" class="info-section">
+            <label>House Coords:</label>
+            <div class="coords-inputs">
+                <input type="number" class="input" id="housex" placeholder="X">
+                <input type="number" class="input" id="housey" placeholder="Y">
+                <input type="number" class="input" id="housez" placeholder="Z">
+                <button class="button" onclick="GetCoords()"> <i class="bi bi-arrow-down-square"></i></button>
+            </div>
+        </div>
+        <div id="garageinfo" class="info-section">
+            <label>Garage Coords:</label>
+            <div class="coords-inputs">
+                <input type="number" class="input" id="garagex" placeholder="X">
+                <input type="number" class="input" id="garagey" placeholder="Y">
+                <input type="number" class="input" id="garagez" placeholder="Z">
+                <input type="number" class="input" id="garageh" placeholder="H">
+                <button class="button" onclick="GetCoordsH()"> <i class="bi bi-arrow-down-square"></i></button>
+            </div>
+        </div>
+        <div id="finish" class="info-section">
+            <button class="button1" onclick="Reset()"> Clear </button>
+            <br><br>
+            <button class="button1" onclick="Finish()"> Add </button>  
+        </div>
+        <div style="float:right; font-weight: bold;">
+            NVM
+        </div>
+    </div>
+    <script src="./script.js" type="text/javascript"></script>
+</body>
+</html>
