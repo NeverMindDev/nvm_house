@@ -28,7 +28,7 @@ https://www.youtube.com/watch?v=i0F9LVindQQ -- / will be updated
 Update 1.0.1
 
 
--Added Prewiev for the interiors
+-Added Preview for the interiors
 
 -Added WebHook if the config is by Jobs
 
