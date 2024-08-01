@@ -3,7 +3,7 @@ games { 'gta5' }
 
 author 'NeverMind'
 description 'NVM HOUSING SYSTEM'
-version '1.0.0'
+version '1.0.1'
 
 client_scripts {
     'main/client.lua',
@@ -19,8 +19,10 @@ shared_script 'config.lua'
 ui_page 'nui/index.html'
 
 files {
+    'nui/images/*.jpg',
     'nui/index.html',
     'nui/script.js',
     'nui/style.css',    
     'config.lua',
+    'state.json',
 }

@@ -5,6 +5,7 @@ $(function () {
             $("#container").show();
         } else {
             $("#container").hide();
+            $("#preview-container").hide();
         }
     }
 
@@ -17,11 +18,21 @@ $(function () {
 
     
     window.addEventListener('message', function(event) {
-        if (event.data.type === "ui") {
+        if (event.data.type === "adminui") {
             if (event.data.status == true) {
                 display(true)
             }
             else {
+                display(false)
+            }
+        } else if (event.data.type === "builderui") {
+            if (event.data.status == true) {
+                display(true)
+                $("#player").hide();
+                $("#player2").hide();
+                $("#statuschange2").hide();
+                $("#statuschange").hide();
+            } else {
                 display(false)
             }
         } else if (event.data.type === "coords" ) {
@@ -38,6 +49,10 @@ $(function () {
         }
     })
    
+    $('#container').on('click', '#close', function () {
+        $.post('http://nvm_house/exit', JSON.stringify({}));
+        display(false)
+    });
 })
 
 function GetCoords() {
@@ -50,6 +65,7 @@ function GetCoordsH() {
 
 function Reset() {
     $('#player').val('');
+    $('#money').val('');
     $('#housex').val('');
     $('#housey').val('');
     $('#housez').val('');
@@ -62,8 +78,11 @@ function Reset() {
 
 function Finish() {
     $("#container").hide();
+    $("#preview-container").hide();
 
+    const checked = $('#statuschange').is(':checked');
     const ID = $('#player').val();
+    const money = $('#money').val();
     const housex = $('#housex').val();
     const housey = $('#housey').val();
     const housez = $('#housez').val();
@@ -75,14 +94,17 @@ function Finish() {
 
     const interior = $('#interior-select').val();
 
-    $.post('https://nvm_house/datas', JSON.stringify({ 
+    $.post('https://nvm_house/datas', JSON.stringify({
+        isplayer : checked,
         player: ID,
+        money: money,
         house: { x: housex, y: housey, z: housez },
         garage: { x: garagex, y: garagey, z: garagez, h: garageh},
         interior: interior
     }))
 
     $('#player').val('');
+    $('#money').val('');
     $('#housex').val('');
     $('#housey').val('');
     $('#housez').val('');
@@ -91,4 +113,30 @@ function Finish() {
     $('#garagez').val('');
     $('#garageh').val('');
     $('#interior-select').val('1');
+}
+
+function Preview() {
+    const interior = $('#interior-select').val();
+    const imageurl = `./images/${interior}.jpg`;
+    $("#preview-container").show();
+    $('#preview-image').attr('src', imageurl).show();
+}
+
+function Close() {
+    $("#preview-container").hide();
+}
+
+function StatusChange() {
+    const checked = $('#statuschange').is(':checked');
+    if (checked) {
+        $("#money").hide();
+        $("#player").show();
+        $("#money2").hide();
+        $("#player2").show();
+    } else {
+        $("#money").show();
+        $("#player").hide();
+        $("#money2").show();
+        $("#player2").hide();
+    }
 }

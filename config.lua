@@ -1,9 +1,30 @@
 Config = {}
 
-Config.Command = "house"
+Config.UseAdmin = false  --if true will use ESX admin groups , false will use group // either way setup carefully!
 
-Config.Access = {
+--ADMIN
+Config.AdminCommand = "house"
+
+Config.AccessCommand = {
     ["user"] = false,
-    ["szervermanager"] = true,
-    ["tulaj"] = true
+    ["manager"] = true,
+    ["owner"] = true
 }
+
+
+--JOB
+Config.UseJob = "admin"
+
+Config.UseItem = false     --if true then player need an item, false then use a command
+Config.Item = "laptop"
+
+Config.JobCommand = "house"
+
+
+-- BOT
+Config.WebHook = ""
+
+Config.BuyHook = true -- if true, you will get discord notify if player is buyed a house
+
+Config.Name = "BOB the Builder"
+Config.Footer = "By: NVM"

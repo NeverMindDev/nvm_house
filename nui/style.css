@@ -5,15 +5,16 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
+    align-items: center;
 }
 
 #container {
-    background-color: rgba(46, 139, 87, 0.6); /* Sötét zöld háttérszín */
+    background-color: rgba(46, 139, 87, 0.6);
     padding: 10px;
-    border-radius: 10px; /* Lekerekített sarkok */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9); /* Erősebb árnyék */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9); 
     color: white;
-    width: 450px; /* Szélesség módosítása */
+    width: 450px;
     box-sizing: border-box;
     display: none;
 }
@@ -21,7 +22,7 @@ body {
 h2 {
     text-align: center;
     margin-bottom: 20px;
-    font-size: 1.5em; /* Nagyobb cím */
+    font-size: 1.5em;
 }
 
 .info-section {
@@ -29,16 +30,16 @@ h2 {
 }
 
 .info-section label {
-    display: block;
+    display: inline-block;
     margin-bottom: 8px;
-    font-size: 1em; /* Kicsit nagyobb szöveg méret */
+    font-size: 1em;
 }
 
 .input {
-    width: calc(100% - 20px); /* Szélesség módosítása */
+    width: calc(100% - 20px);
     padding: 5px;
     margin-bottom: 10px;
-    border: 1px solid #ddd; /* Világos szegély */
+    border: 1px solid #ddd;
     border-radius: 4px;
     box-sizing: border-box;
 }
@@ -49,7 +50,7 @@ h2 {
 }
 
 .button, .button1 {
-    background-color: #4caf50; /* Világos zöld háttérszín */
+    background-color: #4caf50;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -63,7 +64,7 @@ h2 {
 }
 
 .button:hover, .button1:hover {
-    background-color: #006006; /* Sötétebb zöld árnyalat a hover állapothoz */
+    background-color: #006006;
 }
 
 .button1 {
@@ -83,4 +84,31 @@ h2 {
 
 .button-group .button:last-child {
     margin-right: 0;
+}
+
+#preview-container {
+    display: none; 
+    width: 1000px; 
+    height: auto;
+    margin-left: 10px;
+}
+
+#preview-image {
+    display: none; 
+    width: 1000px; 
+    height: auto; 
+    margin-top: 10px;
+}
+
+#close {
+    float: right;
+    position: relative;
+    color: #f03a17;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#statuschange {
+    margin-left: 10px;
+    transform: scale(2.0);
 }
