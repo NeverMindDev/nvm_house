@@ -3,7 +3,7 @@ games { 'gta5' }
 
 author 'NeverMind'
 description 'NVM HOUSING SYSTEM'
-version '1.0.1'
+version '1.1.0'
 
 client_scripts {
     'main/client.lua',
