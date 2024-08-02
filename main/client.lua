@@ -1,11 +1,42 @@
 ESX = exports['es_extended']:getSharedObject()
 
+--Admin commands
+RegisterCommand(Config.AdminGet, function()
+    if not Config.GetAcess[LocalPlayer.state.group] then
+        Citizen.Wait(200)
+        TriggerEvent('chat:addMessage', { color = { 255, 0, 0}, multiline = true, args = {"[Admin]", "Access denied for this command!"} })
+        return
+    end
+    ESX.TriggerServerCallback("nvm_house:getallhouse", function(house2)
+        if house2 then
+            for k, v in ipairs(house2) do
+                local pped = PlayerPedId()
+                local pcoords = GetEntityCoords(pped, false)
+                local hx = tonumber(v.hcoords.x)
+                local hy = tonumber(v.hcoords.y)
+                local hz = tonumber(v.hcoords.z)
+                local dist = #(pcoords - vec3(hx, hy, hz))
+                
+                if dist < 5.0 then
+                    SetNuiFocus(true, true)
+                    SendNUIMessage({
+                        type = "infoui",
+                        status = true,
+                        data = {v.id, v.bidentifier, v.bname, v.oidentifier, v.oname, v.interior, v.locked, v.price}
+                    })
+                end
+            end
+        end
+    end)
+end)
+
+
 -- js /command
 if Config.UseAdmin then
     RegisterCommand(Config.AdminCommand, function()
-        if not Config.Access[LocalPlayer.state.group] then
+        if not Config.AccessCommand[LocalPlayer.state.group] then
             Citizen.Wait(200)
-            TriggerEvent('chat:addMessage', { color = { 255, 0, 0}, multiline = true, args = {"[Admin]", "Access denied for command house!"} })
+            TriggerEvent('chat:addMessage', { color = { 255, 0, 0}, multiline = true, args = {"[Admin]", "Access denied for this command!"} })
             return
         end
         SetNuiFocus(true, true)
@@ -65,21 +96,55 @@ RegisterNUICallback("coords", function(data)
         })
     end
 end)
+local refresh = false
 RegisterNUICallback("datas", function(data)
     SetNuiFocus(false, false) 
     ESX.TriggerServerCallback("nvm_house:setuphouse", function(isplayer, status, message)
         if isplayer then
             if status then
                 ESX.ShowNotification(message)
+                refresh = true
             else
                 ESX.ShowNotification(message)
             end
         else
             if status then
                 ESX.ShowNotification(message)
+                refresh = true
             else
                 ESX.ShowNotification(message)
             end
+        end
+    end, data)
+end)
+RegisterNUICallback("interior", function(data)
+    SetNuiFocus(false, false) 
+    ESX.TriggerServerCallback("nvm_house:changeinterior", function(status, message)
+        if status then
+            ESX.ShowNotification(message)
+            refresh = true
+        else
+            ESX.ShowNotification(message)
+        end
+    end, data)
+end)
+RegisterNUICallback("delete", function(data)
+    SetNuiFocus(false, false) 
+    ESX.TriggerServerCallback("nvm_house:delete", function(status, message)
+        if status then
+            ESX.ShowNotification(message)
+            refresh = true
+        else
+            ESX.ShowNotification(message)
+        end
+    end, data)
+end)
+RegisterNUICallback("lock", function(data)
+    ESX.TriggerServerCallback("nvm_house:housetoggleadmin", function(status)
+        if status then
+            ESX.ShowNotification("Successfully closed the House.")
+        else
+            ESX.ShowNotification("Successfully opened the House.")
         end
     end, data)
 end)
@@ -130,19 +195,14 @@ function RefreshHouses(identifier)
 end
 
 
-function SetupHouses(identifier)
-    Citizen.CreateThread(function()
-        while true do
-            Citizen.Wait(5000)
-	    houses = nil
-            gethouses = nil
-            RefreshHouses(identifier)
-        end
-    end)
-    
+function SetupHouses(identifier)    
     Citizen.CreateThread(function()
         while true do
             Citizen.Wait(waittime)
+            if refresh then
+                RefreshHouses(identifier)
+                refresh = false
+            end
             local pped = PlayerPedId()
             local pcoords = GetEntityCoords(pped, false)
             local near = false
@@ -188,51 +248,55 @@ function SetupHouses(identifier)
                     end
                 end
             end
-            for k, v in ipairs(gethouses) do
-                local ix = tonumber(v.icoords.x)
-                local iy = tonumber(v.icoords.y)
-                local iz = tonumber(v.icoords.z)
-                local dist2 = #(pcoords - vec3(ix, iy, iz))
-                local dist3 = #(pcoords - vec3(tonumber(v.scoords.x), tonumber(v.scoords.y), tonumber(v.scoords.z)))
+            if gethouses then
+                for k, v in ipairs(gethouses) do
+                    local ix = tonumber(v.icoords.x)
+                    local iy = tonumber(v.icoords.y)
+                    local iz = tonumber(v.icoords.z)
+                    local dist2 = #(pcoords - vec3(ix, iy, iz))
+                    local dist3 = #(pcoords - vec3(tonumber(v.scoords.x), tonumber(v.scoords.y), tonumber(v.scoords.z)))
 
-                if dist2 < 10.0 then
-                    near = true
-                    DrawMarker(22, ix, iy, iz, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 100, 0, 0, 0, 1)
-                end
-                
-                if dist2 < 1.0 then
-                    DisplayHelpText("Press ~INPUT_CONTEXT~ to interact / ~INPUT_DETONATE~ close/open")
-                    if IsControlJustPressed(0, 38) then
-                        ESX.TriggerServerCallback("nvm_house:lockstatus", function(lockstate, isowner)
-                            if lockstate then
-                                ESX.ShowNotification("This house is closed.")
-                            else
-                                HouseState(identifier, "leave", v.isowner, v.interior, v.id, nil, tonumber(v.coords.x), tonumber(v.coords.y), tonumber(v.coords.z))
-                            end
-                        end, v.identifier, v.id)
-                    end
-                    if IsControlJustPressed(0, 47) then
-                        ToggleHouse(identifier, v.id, true)
-                    end
-                end
-
-                if dist3 < 5.0 then
-                    near = true
-                    DrawMarker(29, tonumber(v.scoords.x), tonumber(v.scoords.y), tonumber(v.scoords.z), 0, 0, 0, 0, 0, 0, 0.5, 0.5, 0.5001, 255, 0, 0, 200, 0, 0, 0, 1)
-                end
-
-                if dist3 < 0.5 then
-                    if IsControlJustPressed(0, 38) then
-                        if v.isowner then
-                            ESX.TriggerServerCallback("nvm_housingshell:openstash", function(stashId)
-                                exports.ox_inventory:openInventory('stash', {id=stashId, owner=stashId})
-                            end, v.id)
-                        else
-                            ESX.ShowNotification("There's been an error!")
+                    if dist2 < 10.0 then
+                        near = true
+                        if gethouses then
+                            DrawMarker(22, ix, iy, iz, 0, 0, 0, 0, 0, 0, 1.0, 1.0, 1.0, 255, 0, 0, 100, 0, 0, 0, 1)
                         end
                     end
-                end
 
+                    if dist2 < 1.0 then
+                        DisplayHelpText("Press ~INPUT_CONTEXT~ to interact / ~INPUT_DETONATE~ close/open")
+                        if IsControlJustPressed(0, 38) then
+                            ESX.TriggerServerCallback("nvm_house:lockstatus", function(lockstate, isowner)
+                                if lockstate then
+                                    ESX.ShowNotification("This house is closed.")
+                                else
+                                    HouseState(identifier, "leave", v.isowner, v.interior, v.id, nil, tonumber(v.coords.x), tonumber(v.coords.y), tonumber(v.coords.z))
+                                end
+                            end, v.identifier, v.id)
+                        end
+                        if IsControlJustPressed(0, 47) then
+                            ToggleHouse(identifier, v.id, true)
+                        end
+                    end
+
+                    if dist3 < 5.0 then
+                        near = true
+                        DrawMarker(29, tonumber(v.scoords.x), tonumber(v.scoords.y), tonumber(v.scoords.z), 0, 0, 0, 0, 0, 0, 0.5, 0.5, 0.5001, 255, 0, 0, 200, 0, 0, 0, 1)
+                    end
+
+                    if dist3 < 0.5 then
+                        if IsControlJustPressed(0, 38) then
+                            if v.isowner then
+                                ESX.TriggerServerCallback("nvm_housingshell:openstash", function(stashId)
+                                    exports.ox_inventory:openInventory('stash', {id=stashId, owner=stashId})
+                                end, v.id)
+                            else
+                                ESX.ShowNotification("There's been an error!")
+                            end
+                        end
+                    end
+
+                end
             end
             if near then
                 waittime = 0
@@ -368,6 +432,7 @@ function HouseState(identifier, action, isowner, interior, houseid, price, x , y
             DoScreenFadeIn(1000)
             ESX.TriggerServerCallback("nvm_house:savedata", function()                                                
             end, identifier, isowner, interior, houseid, x, y, z, icoords.x, icoords.y, icoords.z, scoords.x, scoords.y, scoords.z)
+            refresh = true
         elseif data.current.name == "tpout" then
             menu.close()
             DoScreenFadeOut(1000)
@@ -378,6 +443,7 @@ function HouseState(identifier, action, isowner, interior, houseid, price, x , y
             ESX.TriggerServerCallback("nvm_house:cleardata", function()
                                                 
             end, identifier)
+            refresh = true
         elseif data.current.name == "keyadd" then
             menu.close()
             local playeradd = KeyboardInput("Who do you want to give a key to? (ID)", "", 4)
@@ -386,6 +452,7 @@ function HouseState(identifier, action, isowner, interior, houseid, price, x , y
                     if state then
                         SetupBlips(identifier)
                         ESX.ShowNotification(message)
+                        refresh = true
                     else
                         ESX.ShowNotification(message)
                     end
@@ -412,6 +479,7 @@ function HouseState(identifier, action, isowner, interior, houseid, price, x , y
                     local selectedKey = data2.current.value
                     if selectedKey then
                         SetupBlips(identifier)
+                        refresh = true
                         ESX.TriggerServerCallback("nvm_house:removekey", function()
                         end, houseid, selectedKey)
                         menu2.close()
