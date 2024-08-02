@@ -156,6 +156,7 @@ Citizen.CreateThread(function()
         Citizen.Wait(2000)
         identifier = ESX.GetPlayerData().identifier
     end
+    refresh = true
     SetupBlips(identifier)
     SetupHouses(identifier)
 end)
@@ -412,6 +413,7 @@ function HouseState(identifier, action, isowner, interior, houseid, price, x , y
             ESX.TriggerServerCallback("nvm_house:buyhouse", function(state, message)
                 if state then
                     SetupBlips(identifier)
+                    refresh = true
                     ESX.ShowNotification(message)
                     cooldown = true
                     Citizen.SetTimeout(5000, function()
