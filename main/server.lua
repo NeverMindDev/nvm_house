@@ -87,14 +87,41 @@ ESX.RegisterServerCallback("nvm_house:setuphouse", function(source, cb, datas)
     end
 end)
 
+ESX.RegisterServerCallback("nvm_house:changeinterior", function(source, cb, datas)
+    MySQL.Async.execute('UPDATE nvm_houses SET interior = @interior WHERE id = @id', {
+        ['@interior'] = datas.interior,
+        ['@id'] = datas.id,
+    }, function(rowsChanged)
+        if rowsChanged > 0 then
+            cb(true, "Sucesfully changed interior in "..datas.id.." house. New Int: "..datas.interior.."")
+        else
+            cb(false, "There's been an error during interior update")
+        end
+    end)
+end)
+
+ESX.RegisterServerCallback("nvm_house:delete", function(source, cb, datas)
+    MySQL.Async.execute('DELETE FROM nvm_houses WHERE id = @id', {
+        ['@id'] = datas.id
+    }, function(rowsChanged)
+        if rowsChanged > 0 then
+            cb(true, "Sucesfully deleted "..datas.id.." house")
+        else
+            cb(false, "There's been an error during procession")
+        end
+    end)
+end)
+
 ESX.RegisterServerCallback("nvm_house:getallhouse", function(source, cb)
     MySQL.Async.fetchAll('SELECT * FROM nvm_houses', {}, function(results)
         local houses = {}
         for i=1, #results, 1 do
             table.insert(houses, {
                 id = results[i].id,
+                bidentifier = results[i].bidentifier,
                 bname = results[i].bname,
-                oname = results[i].bname,
+                oidentifier = results[i].oidentifier,
+                oname = results[i].oname,
                 hcoords = json.decode(results[i].house_coords),
                 gcoords = json.decode(results[i].garage_coords),
                 interior = results[i].interior,
@@ -178,6 +205,29 @@ ESX.RegisterServerCallback("nvm_house:housetoggle", function(source, cb, identif
                 ['@state'] = state,
                 ['@id'] = houseid,
                 ['@oidentifier'] = identifier
+            }, function(result)
+                if result > 0 then
+                    cb(state)
+                end
+            end)
+        end
+    end)
+end)
+
+ESX.RegisterServerCallback("nvm_house:housetoggleadmin", function(source, cb, datas)
+    MySQL.Async.fetchAll('SELECT is_locked FROM nvm_houses WHERE id = @id', {
+        ['@id'] = datas.id        
+    }, function(result)
+        if result[1] then
+            local currentState = result[1].is_locked
+            if currentState then
+                state = false
+            else
+                state = true
+            end
+            MySQL.Async.execute('UPDATE nvm_houses SET is_locked = @state WHERE id = @id', {
+                ['@state'] = state,
+                ['@id'] = datas.id
             }, function(result)
                 if result > 0 then
                     cb(state)
