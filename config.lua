@@ -1,6 +1,6 @@
 Config = {}
 
-Config.UseAdmin = false  --if true will use ESX admin groups , false will use group // either way setup carefully!
+Config.UseAdmin = false  --if true will use ESX admin groups , false will use the job way // either way setup carefully!
 
 --ADMIN
 Config.AdminCommand = "house"
