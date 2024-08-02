@@ -6,12 +6,14 @@ $(function () {
         } else {
             $("#container").hide();
             $("#preview-container").hide();
+            $("#info-container").hide();
+            $("#interior-container").hide();
         }
     }
 
     document.addEventListener('keydown', function(event){
         if(event.key==="Escape"){
-            $.post('http://nvm_house/exit', JSON.stringify({}));
+            $.post('http://nvm_house/exit', JSON.stringify({}));   
             display(false)
         }
     });
@@ -35,6 +37,20 @@ $(function () {
             } else {
                 display(false)
             }
+        } else if (event.data.type === "infoui") {
+            if (event.data.status == true) {
+                $("#info-container").show();
+                $("#houseid").text(event.data.data[0]);
+                $("#bname").val(event.data.data[2]);
+                $("#bidentifier").val(event.data.data[1]);
+                $("#oname").val(event.data.data[4] || "No Data");
+                $("#oidentifier").val(event.data.data[3] || "No Data");
+                $("#interior2").val(event.data.data[5]);
+                $("#price").val(event.data.data[7]);
+                $("#lock").val(event.data.data[6] ? "Closed" : "Opened");
+            } else {
+                $("#info-container").hide();
+            }
         } else if (event.data.type === "coords" ) {
             if (event.data.status == "house" ) {
                 $('#housex').val(event.data.x.toFixed(2));
@@ -52,6 +68,20 @@ $(function () {
     $('#container').on('click', '#close', function () {
         $.post('http://nvm_house/exit', JSON.stringify({}));
         display(false)
+    });
+
+    $('#info-container').on('click', '#close', function () {
+        $.post('http://nvm_house/exit', JSON.stringify({}));
+        display(false)
+    });
+
+    $('#interior-container').on('click', '#close', function () {
+        $.post('http://nvm_house/exit', JSON.stringify({}));
+        display(false)
+    });
+
+    $('#confirm').on('click', '#close', function () {
+        $("#confirm").hide();
     });
 })
 
@@ -122,6 +152,13 @@ function Preview() {
     $('#preview-image').attr('src', imageurl).show();
 }
 
+function Preview2() {
+    const interior = $('#interior-change').val();
+    const imageurl = `./images/${interior}.jpg`;
+    $("#preview-container").show();
+    $('#preview-image').attr('src', imageurl).show();
+}
+
 function Close() {
     $("#preview-container").hide();
 }
@@ -139,4 +176,58 @@ function StatusChange() {
         $("#money2").show();
         $("#player2").hide();
     }
+}
+
+function ChangeInterior() {
+    $("#info-container").hide();
+    const interior = $('#interior2').val();
+    const houseid = $('#houseid').text();
+    $("#interior-container").show();
+    $("#interiornow").val(interior);
+    $("#houseid2").text(houseid);
+}
+
+function InteriorChange() {
+    $("#preview-container").hide();
+    $("#interior-container").hide();
+
+    const interior = $('#interior-change').val();
+    const houseid = $('#houseid2').text();
+    $.post('https://nvm_house/interior', JSON.stringify({
+        id : houseid,
+        interior: interior
+    }))
+}
+
+function DeleteHouse() {
+    $("#confirm").show();
+}
+
+function DeleteHouseNo() {
+    $("#confirm").hide();
+}
+
+function DeleteHouseYes() {
+    $("#info-container").hide();
+    $("#confirm").hide();
+    const houseid = $('#houseid').text();
+    $.post('https://nvm_house/delete', JSON.stringify({
+        id : houseid
+    }))
+    $.post('http://nvm_house/exit', JSON.stringify({}));
+}
+
+function LockStatus() {
+    let status;
+    const houseid = $('#houseid').text();
+    const lock = $("#lock").val();
+    if (lock === "Opened") {
+        status = true
+    } else if (lock === "Closed") {
+        status = false
+    }
+    $("#lock").val(status ? "Closed" : "Opened");
+    $.post('https://nvm_house/lock', JSON.stringify({
+        id : houseid
+    }))
 }
