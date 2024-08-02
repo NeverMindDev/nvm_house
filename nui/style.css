@@ -8,7 +8,7 @@ body {
     align-items: center;
 }
 
-#container {
+.container {
     background-color: rgba(46, 139, 87, 0.6);
     padding: 10px;
     border-radius: 10px;
