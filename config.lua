@@ -1,14 +1,26 @@
 Config = {}
 
-Config.UseAdmin = false  --if true will use ESX admin groups , false will use the job way // either way setup carefully!
+--Permanent admin command!!
+Config.AdminGet = "gethouse"
+
+Config.GetAcess = {
+    ["user"] = false,
+    ["szerevrmanager"] = true,
+    ["tulaj"] = true
+}
+
+----------------------------
+
+
+Config.UseAdmin = true  --if true will use ESX admin groups , false will use group // either way setup carefully!
 
 --ADMIN
 Config.AdminCommand = "house"
 
 Config.AccessCommand = {
     ["user"] = false,
-    ["manager"] = true,
-    ["owner"] = true
+    ["szerevrmanager"] = true,
+    ["tulaj"] = true
 }
 
 
