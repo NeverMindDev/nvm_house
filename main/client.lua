@@ -196,7 +196,13 @@ function RefreshHouses(identifier)
 end
 
 
-function SetupHouses(identifier)    
+function SetupHouses(identifier)
+    Citizen.CreateThread(function()
+	while true do
+	   Citizen.Wait(3000)
+		RefreshHouses(identifier)		
+	end
+    end)    
     Citizen.CreateThread(function()
         while true do
             Citizen.Wait(waittime)
