@@ -43,8 +43,11 @@ Update 1.2.0
 
 
 -Added Admin command, if they're close to the house, it will automatically detect that house, and will show all information about it
+
 -Added in this menu, interior change, delete house, open/close house
+
 -Fix some bugs, and hopefully it's gona work finally now
+
 -Reduced the updateions of the houses only when something is happening
 
 For the future :
