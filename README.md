@@ -25,7 +25,8 @@ It's for education reason only! And if you change the name of the folder, make s
 Showcase:
 https://www.youtube.com/watch?v=i0F9LVindQQ -- / will be updated
 
-Update 1.0.1
+
+Update 1.1.0
 
 
 -Added Preview for the interiors
@@ -37,6 +38,14 @@ Update 1.0.1
 -Added the options for admin that can add a buyable house, or add instant for the player ID, and by that added a buyable houses
 
 
+
+Update 1.2.0
+
+
+-Added Admin command, if they're close to the house, it will automatically detect that house, and will show all information about it
+-Added in this menu, interior change, delete house, open/close house
+-Fix some bugs, and hopefully it's gona work finally now
+-Reduced the updateions of the houses only when something is happening
 
 For the future :
 
