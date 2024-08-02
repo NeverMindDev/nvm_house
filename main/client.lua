@@ -134,6 +134,8 @@ function SetupHouses(identifier)
     Citizen.CreateThread(function()
         while true do
             Citizen.Wait(5000)
+	    houses = nil
+            gethouses = nil
             RefreshHouses(identifier)
         end
     end)
