@@ -19,7 +19,7 @@ Config.AdminCommand = "house"
 
 Config.AccessCommand = {
     ["user"] = false,
-    ["szerevrmanager"] = true,
+    ["admin"] = true,
     ["tulaj"] = true
 }
 
